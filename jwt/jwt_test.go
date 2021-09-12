@@ -2,12 +2,10 @@ package jwt
 
 import (
 	"fmt"
-	"part-time/user-service/config"
 	"testing"
 )
 
 func TestCreateToken(t *testing.T) {
-	config.GetConfig().JWT.ExpiresTime = 20
 	token, err := CreateToken("part_time_job", "18201108862", uint(1), false)
 	fmt.Println(token)
 	fmt.Println(err)
@@ -25,5 +23,4 @@ func TestParseToken(t *testing.T) {
 		return
 	}
 	fmt.Println(r)
-
 }

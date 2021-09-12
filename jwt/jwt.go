@@ -2,7 +2,6 @@ package jwt
 
 import (
 	"errors"
-	"part-time/user-service/config"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -25,7 +24,7 @@ type JwtCustomClaims struct {
 func CreateToken(secretKey string, issuer string, uid uint, isAdmin bool) (tokenString string, err error) {
 	claims := &JwtCustomClaims{
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Unix() + config.GetConfig().JWT.ExpiresTime,
+			ExpiresAt: time.Now().Unix() + 3600*24*7,
 			Issuer:    issuer,
 		},
 		uid,

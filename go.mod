@@ -1,4 +1,4 @@
-module github.com/wxw9868
+module github.com/wxw9868/util
 
 go 1.16
 

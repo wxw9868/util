@@ -1,16 +1,9 @@
-package common
+package mail
 
-import (
-	"log"
-	"time"
-
-	"part-time/user-service/pkg/redis"
-	"part-time/user-service/pkg/util/mail"
-)
-
+// DoSendMail 发送邮件
 func DoSendMail(email, content, code string) error {
 	config := `{"username":"986845663@qq.com","password":"emtpyouqirhebfij","host":"smtp.qq.com","port":587}`
-	mail := mail.NewEMail(config)
+	mail := NewEMail(config)
 	mail.To = []string{email}
 	mail.From = "986845663@qq.com"
 	mail.Subject = "注册验证码"
@@ -70,13 +63,12 @@ func DoSendMail(email, content, code string) error {
 		</table>
 		</body>`
 	//mail.AttachFile("/Users/astaxie/github/beego/beego.go")
-	if err := redis.GetRedisClient().Set(email, code, 15*time.Minute).Err(); err != nil {
-		log.Println("邮箱验证码存储失败：", err)
-		return err
-	}
+	//if err := redis.GetRedisClient().Set(email, code, 15*time.Minute).Err(); err != nil {
+	//	log.Println("邮箱验证码存储失败：", err)
+	//	return err
+	//}
 	if err := mail.Send(); err != nil {
 		//发送失败错误处理
-		log.Println("邮件发送失败：", err)
 		return err
 	}
 	return nil

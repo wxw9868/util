@@ -12,8 +12,7 @@ import (
 
 // 数据验证器
 func getValidate() (validate *validator.Validate, trans ut.Translator) {
-	z := zh.New()
-	uni := ut.New(z, z)
+	uni := ut.New(zh.New(), zh.New())
 	trans, ok := uni.GetTranslator("zh")
 	if !ok {
 		log.Error("中文翻译器初始化失败！")
