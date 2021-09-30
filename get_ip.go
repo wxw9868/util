@@ -1,9 +1,10 @@
-package tool
+package util
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -12,37 +13,43 @@ import (
 	"strings"
 )
 
-//获取客户端ip
+// GetIp 获取客户端ip
 func GetIp() (string, error) {
 	conn, err := net.Dial("udp", "google.com:80")
 	if err != nil {
 		return "", nil
 	}
-	defer conn.Close()
+	defer func(conn net.Conn) {
+		_ = conn.Close()
+	}(conn)
 	return strings.Split(conn.LocalAddr().String(), ":")[0], nil
 }
 
-// 通过http://myexternalip.com/raw获取公网IP
+// GetExternalIP 通过http://myexternalip.com/raw获取公网IP
 func GetExternalIP() string {
 	resp, err := http.Get("http://myexternalip.com/raw")
 	if err != nil {
 		return GetExternalIP()
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
 	content, _ := ioutil.ReadAll(resp.Body)
 	return string(content)
 }
 
-// 通过dns服务器8.8.8.8:80获取使用的ip
+// GetPulicIP 通过dns服务器8.8.8.8:80获取使用的ip
 func GetPulicIP() string {
 	conn, _ := net.Dial("udp", "8.8.8.8:80")
-	defer conn.Close()
+	defer func(conn net.Conn) {
+		_ = conn.Close()
+	}(conn)
 	localAddr := conn.LocalAddr().String()
 	idx := strings.LastIndex(localAddr, ":")
 	return localAddr[0:idx]
 }
 
-// 获取本地ip
+// GetIntranetIp 获取本地ip
 func GetIntranetIp() {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
@@ -59,7 +66,7 @@ func GetIntranetIp() {
 	}
 }
 
-// 判断是否是公网ip
+// IsPublicIP 判断是否是公网ip
 func IsPublicIP(IP net.IP) bool {
 	if IP.IsLoopback() || IP.IsLinkLocalMulticast() || IP.IsLinkLocalUnicast() {
 		return false
@@ -80,7 +87,7 @@ func IsPublicIP(IP net.IP) bool {
 }
 
 // ip地址string转int
-func inet_aton(ipnr net.IP) int64 {
+func inetAton(ipnr net.IP) int64 {
 	bits := strings.Split(ipnr.String(), ".")
 	b0, _ := strconv.Atoi(bits[0])
 	b1, _ := strconv.Atoi(bits[1])
@@ -95,16 +102,16 @@ func inet_aton(ipnr net.IP) int64 {
 }
 
 // ip地址int转string
-func inet_ntoa(ipnr int64) net.IP {
-	var bytes [4]byte
-	bytes[0] = byte(ipnr & 0xFF)
-	bytes[1] = byte((ipnr >> 8) & 0xFF)
-	bytes[2] = byte((ipnr >> 16) & 0xFF)
-	bytes[3] = byte((ipnr >> 24) & 0xFF)
-	return net.IPv4(bytes[3], bytes[2], bytes[1], bytes[0])
+func inetNtoa(ipnr int64) net.IP {
+	var b [4]byte
+	b[0] = byte(ipnr & 0xFF)
+	b[1] = byte((ipnr >> 8) & 0xFF)
+	b[2] = byte((ipnr >> 16) & 0xFF)
+	b[3] = byte((ipnr >> 24) & 0xFF)
+	return net.IPv4(b[3], b[2], b[1], b[0])
 }
 
-// 判断ip地址区间
+// IpBetween 判断ip地址区间
 func IpBetween(from net.IP, to net.IP, test net.IP) bool {
 	if from == nil || to == nil || test == nil {
 		fmt.Println("An ip input is nil") // or return an error!? return false
@@ -122,7 +129,7 @@ func IpBetween(from net.IP, to net.IP, test net.IP) bool {
 	return false
 }
 
-// 通过淘宝接口根据公网ip获取国家运营商等信息
+// IPInfo 通过淘宝接口根据公网ip获取国家运营商等信息
 type IPInfo struct {
 	Code int `json:"code"`
 	Data IP  `json:"data"`
@@ -147,7 +154,9 @@ func TabaoAPI(ip string) *IPInfo {
 	if err != nil {
 		return nil
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
 	out, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil

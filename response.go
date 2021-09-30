@@ -1,8 +1,4 @@
-package common
-
-import (
-	"encoding/json"
-)
+package util
 
 const (
 	CodeSuccess = 1
@@ -23,17 +19,17 @@ type Message struct {
 	Data   interface{} `json:"data"`
 }
 
-// 默认成功
+// Success 默认成功
 func Success(msg string, data interface{}) Message {
 	return Msg(true, CodeSuccess, msg, data)
 }
 
-// 默认失败
+// Failure 默认失败
 func Failure(msg string) Message {
 	return Msg(false, CodeFail, msg, nil)
 }
 
-// 序列化消息
+// Msg 序列化消息
 func Msg(status bool, code int, msg string, data interface{}) Message {
 	if msg == "" {
 		if val, ok := MsgCodeMap[code]; ok {
@@ -49,14 +45,6 @@ func Msg(status bool, code int, msg string, data interface{}) Message {
 		Data:   data,
 	}
 	return m
-}
-
-func ToByte(m Message) ([]byte, error) {
-	bytes, err := json.Marshal(&m)
-	if err != nil {
-		return nil, err
-	}
-	return bytes, nil
 }
 
 func GetCodeMsg(code int) string {

@@ -15,27 +15,37 @@
 package mail
 
 import (
-	"fmt"
+	"errors"
 	"testing"
 )
 
 func TestMail(t *testing.T) {
+	captcha := "123456"
+	email := "wxw9868@163.com"
+	content := "注册账号"
+	err := DoSendMail(email, content, captcha)
+	t.Fatal(err)
+}
+
+// DoSendMail 发送邮件
+func DoSendMail(email, content, captcha string) error {
+	fromMail := "986845663@qq.com"
 	config := `{"username":"986845663@qq.com","password":"emtpyouqirhebfij","host":"smtp.qq.com","port":587}`
 	mail := NewEMail(config)
 	if mail.Username != "986845663@qq.com" {
-		t.Fatal("email parse get username error")
+		return errors.New("email parse get username error")
 	}
 	if mail.Password != "emtpyouqirhebfij" {
-		t.Fatal("email parse get password error")
+		return errors.New("email parse get password error")
 	}
 	if mail.Host != "smtp.qq.com" {
-		t.Fatal("email parse get host error")
+		return errors.New("email parse get host error")
 	}
 	if mail.Port != 587 {
-		t.Fatal("email parse get port error")
+		return errors.New("email parse get port error")
 	}
-	mail.To = []string{"wxw9868@163.com"}
-	mail.From = "986845663@qq.com"
+	mail.To = []string{email}
+	mail.From = fromMail
 	mail.Subject = "hi, just from ginwebapi!"
 	mail.Text = "Text Body is, of course, supported!"
 	mail.HTML = `<head>
@@ -67,7 +77,7 @@ func TestMail(t *testing.T) {
 		<div style="line-height:1.5;font-size:14px;margin-bottom:25px;color:#4d4d4d;">
 		<strong style="display:block;margin-bottom:15px;">尊敬的用户：<span style="color:#f60;font-size: 16px;"></span>您好！</strong>
 		<strong style="display:block;margin-bottom:15px;">
-			您正在进行<span style="color: red">注册账号</span>操作，请在验证码输入框中输入：<span style="color:#f60;font-size: 24px">182614</span>，以完成操作。
+			您正在进行<span style="color: red">` + content + `</span>操作，请在验证码输入框中输入：<span style="color:#f60;font-size: 24px">` + captcha + `</span>，以完成操作。
 		</strong>
 		</div>
 		<div style="margin-bottom:30px;">
@@ -84,7 +94,7 @@ func TestMail(t *testing.T) {
 		<p>此为系统邮件，请勿回复<br>
 			请保管好您的邮箱，避免账号被他人盗用
 		</p>
-		<p>亿动华源科技团队</p>
+		<p>xxxx团队</p>
 		</div>
 		</div>
 		</td>
@@ -92,13 +102,9 @@ func TestMail(t *testing.T) {
 		</tbody>
 		</table>
 		</body>`
-
-	//mail.AttachFile("/Users/astaxie/github/beego/beego.go")
-	err := mail.Send()
-	//发送
-	if err != nil {
-		fmt.Println("err: ", err)
+	if err := mail.Send(); err != nil {
 		//发送失败错误处理
-		return
+		return err
 	}
+	return nil
 }

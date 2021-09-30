@@ -1,4 +1,4 @@
-package common
+package util
 
 import (
 	"io"
@@ -7,10 +7,21 @@ import (
 	"os"
 )
 
+const defaultMultipartMemory = 32 << 20 // 32 MB
+
+func NewFile(r *http.Request) *Context {
+	return &Context{
+		Request:            r,
+		MaxMultipartMemory: defaultMultipartMemory,
+	}
+}
+
 // Context is the most important part of gin. It allows us to pass variables between middleware,
 // manage the flow, validate the JSON of a request and render a JSON response for example.
 type Context struct {
-	Request            *http.Request
+	Request *http.Request
+	// Value of 'maxMemory' param that is given to http.Request's ParseMultipartForm
+	// method call.
 	MaxMultipartMemory int64
 }
 
@@ -47,12 +58,7 @@ func SaveUploadedFile(file *multipart.FileHeader, dst string) error {
 	return err
 }
 
-// 删除文件
-func RemoveFile(filename string) error {
-	return os.Remove(filename)
-}
-
-// 文件目录是否存在
+// PathExists 文件目录是否存在
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {

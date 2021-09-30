@@ -1,4 +1,4 @@
-package page
+package pagination
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestNewPage(t *testing.T) {
-	pages := NewPage(200, 10)
+	pages := NewPaginator(200, 10)
 	pages.SetCurrentPage(10)
 
 	fmt.Println(pages.TotalPage())

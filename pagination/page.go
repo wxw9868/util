@@ -1,10 +1,10 @@
-package page
+package pagination
 
 import (
 	"math"
 )
 
-type Page struct {
+type Paginator struct {
 	totalCount  int   //总条数
 	totalPage   int   //总页数
 	prePage     int   //上一页
@@ -14,19 +14,19 @@ type Page struct {
 	pageRange   []int //页数列表
 }
 
-// NewPage 初始化结构体
-func NewPage(totalCount, pageSize int) *Page {
+// NewPaginator 初始化结构体
+func NewPaginator(totalCount, pageSize int) *Paginator {
 	if pageSize <= 0 {
 		pageSize = 10
 	}
-	return &Page{
+	return &Paginator{
 		totalCount: totalCount,
 		pageSize:   pageSize,
 	}
 }
 
 // SetCurrentPage 设置当前页
-func (p *Page) SetCurrentPage(currentPage int) {
+func (p *Paginator) SetCurrentPage(currentPage int) {
 	if currentPage > 0 {
 		p.currentPage = currentPage
 	}
@@ -39,7 +39,7 @@ func (p *Page) SetCurrentPage(currentPage int) {
 }
 
 // TotalPage 总页数
-func (p *Page) TotalPage() int {
+func (p *Paginator) TotalPage() int {
 	if p.totalPage > 0 {
 		return p.totalPage
 	}
@@ -48,12 +48,12 @@ func (p *Page) TotalPage() int {
 }
 
 // FirstPage 首页
-func (p *Page) FirstPage() int {
+func (p *Paginator) FirstPage() int {
 	return 1
 }
 
-//尾页
-func (p *Page) LastPage() int {
+// LastPage 尾页
+func (p *Paginator) LastPage() int {
 	if p.totalPage > 0 {
 		return p.totalPage
 	}
@@ -61,7 +61,7 @@ func (p *Page) LastPage() int {
 }
 
 // PrePage 上一页
-func (p *Page) PrePage() int {
+func (p *Paginator) PrePage() int {
 	if p.prePage > 0 {
 		return p.prePage
 	}
@@ -70,7 +70,7 @@ func (p *Page) PrePage() int {
 }
 
 // CurrentPage 当前页
-func (p *Page) CurrentPage() int {
+func (p *Paginator) CurrentPage() int {
 	if p.currentPage > 0 {
 		return p.currentPage
 	}
@@ -79,7 +79,7 @@ func (p *Page) CurrentPage() int {
 }
 
 // NextPage 下一页
-func (p *Page) NextPage() int {
+func (p *Paginator) NextPage() int {
 	if p.nextPage > 0 {
 		return p.nextPage
 	}
@@ -88,32 +88,32 @@ func (p *Page) NextPage() int {
 }
 
 // HasPrev 如果当前页有上一页，HasPrev将返回true。
-func (p *Page) HasPrev() bool {
+func (p *Paginator) HasPrev() bool {
 	return p.CurrentPage() > 1
 }
 
 // HasNext 如果当前页有下一页，HasNext将返回true。
-func (p *Page) HasNext() bool {
+func (p *Paginator) HasNext() bool {
 	return p.CurrentPage() < p.TotalPage()
 }
 
 // IsActive 如果给定的页索引指向当前页，IsActive返回true。
-func (p *Page) IsActive(page int) bool {
+func (p *Paginator) IsActive(page int) bool {
 	return p.CurrentPage() == page
 }
 
 // Offset Offset返回当前偏移量。
-func (p *Page) Offset() int {
+func (p *Paginator) Offset() int {
 	return (p.CurrentPage() - 1) * p.pageSize
 }
 
 // HasPages 如果有多个页面，HasPages返回true。
-func (p *Page) HasPages() bool {
+func (p *Paginator) HasPages() bool {
 	return p.TotalPage() > 1
 }
 
 // Pages Pages返回所有页面的列表。
-func (p *Page) Pages() []int {
+func (p *Paginator) Pages() []int {
 	if p.pageRange == nil && p.totalCount > 0 {
 		var pages []int
 		pageNums := p.TotalPage()

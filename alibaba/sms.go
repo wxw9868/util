@@ -7,15 +7,27 @@ import (
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/dysmsapi"
 )
 
-var regionID = ""
-var accessKeyID = ""
-var accessKeySecret = ""
-var signName = ""
-var templateCode = ""
+type SMS struct {
+	RegionID        string
+	AccessKeyID     string
+	AccessKeySecret string
+	SignName        string
+	TemplateCode    string
+}
+
+func NewSMS(regionID, accessKeyID, accessKeySecret, signName, templateCode string) *SMS {
+	return &SMS{
+		RegionID:        regionID,
+		AccessKeyID:     accessKeyID,
+		AccessKeySecret: accessKeySecret,
+		SignName:        signName,
+		TemplateCode:    templateCode,
+	}
+}
 
 // SendSMS 发送验阿里云证码
-func SendSMS(mobile string, code string) error {
-	client, err := dysmsapi.NewClientWithAccessKey(regionID, accessKeyID, accessKeySecret)
+func (sms *SMS) SendSMS(mobile string, code string) error {
+	client, err := dysmsapi.NewClientWithAccessKey(sms.RegionID, sms.AccessKeyID, sms.AccessKeySecret)
 	if err != nil {
 		return err
 	}
@@ -23,8 +35,8 @@ func SendSMS(mobile string, code string) error {
 	request := dysmsapi.CreateSendSmsRequest()
 	request.Scheme = "https"
 	request.PhoneNumbers = mobile
-	request.SignName = signName
-	request.TemplateCode = templateCode
+	request.SignName = sms.SignName
+	request.TemplateCode = sms.TemplateCode
 	request.TemplateParam = "{\"code\":" + code + "}"
 	response, err := client.SendSms(request)
 	if err != nil {
