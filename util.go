@@ -3,7 +3,7 @@ package util
 import (
 	"encoding/base64"
 	"errors"
-	. "fmt"
+	"fmt"
 	"math/rand"
 	"regexp"
 	"strconv"
@@ -105,7 +105,7 @@ func GenerateCode(width int) string {
 
 	var b strings.Builder
 	for i := 0; i < width; i++ {
-		_, _ = Fprintf(&b, "%d", numeric[rand.Intn(r)])
+		_, _ = fmt.Fprintf(&b, "%d", numeric[rand.Intn(r)])
 	}
 	var s strings.Builder
 	array := strings.Split(b.String(), "")
