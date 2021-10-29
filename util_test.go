@@ -2,8 +2,6 @@ package util
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
 	"testing"
 )
 
@@ -13,7 +11,7 @@ func TestDataEncryption(t *testing.T) {
 }
 
 func TestVerifyPassword(t *testing.T) {
-	err := VerifyPassword("zh1234567")
+	err := VerifyPassword("99999.")
 	fmt.Println(err)
 }
 
@@ -29,6 +27,18 @@ func TestVerifyMobile(t *testing.T) {
 	fmt.Println(VerifyMobile("18201108888"))
 }
 
+func TestVerifyString(t *testing.T) {
+	fmt.Println(VerifyString("18201108888"))
+}
+
+func TestVerifyName(t *testing.T) {
+	fmt.Println(VerifyName("18201108888"))
+}
+
+func TestFormatToUnix(t *testing.T) {
+	fmt.Println(FormatToUnix("2006-01-02 15:04:05"))
+}
+
 func TestVerifyEnglish(t *testing.T) {
 	fmt.Println(VerifyEnglish("we"))
 }
@@ -42,14 +52,12 @@ func TestGetNowTime(t *testing.T) {
 }
 
 func TestGenerateCode(t *testing.T) {
-	count := 0
-	for i := 0; i < 1000000; i++ {
+	for i := 0; i < 10000; i++ {
 		code := GenerateCode(6)
-		array := strings.Split(code, "")
-		firstCharacter, _ := strconv.Atoi(array[0])
-		if firstCharacter == 0 {
-			count++
-		}
+		fmt.Println(code)
 	}
-	fmt.Println(count)
+}
+
+func TestGetOrderID(t *testing.T) {
+	fmt.Println(GenerateOrderSN())
 }
