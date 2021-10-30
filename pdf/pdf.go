@@ -42,7 +42,7 @@ func (pdf *PDF) Run() {
 	if err != nil {
 		panic(err)
 	}
-	path = path + "/internal/util/pdf/ttf/"
+	path = path + "/ttf/"
 
 	r := core.CreateReport()
 	font1 := core.FontMap{
