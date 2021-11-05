@@ -24,32 +24,17 @@ func Success(msg string, data interface{}) Message {
 	return Msg(true, CodeSuccess, msg, data)
 }
 
-// Failure 默认失败
-func Failure(msg string) Message {
+// Fail 默认失败
+func Fail(msg string) Message {
 	return Msg(false, CodeFail, msg, nil)
 }
 
 // Msg 序列化消息
 func Msg(status bool, code int, msg string, data interface{}) Message {
-	if msg == "" {
-		if val, ok := MsgCodeMap[code]; ok {
-			msg = val
-		} else {
-			msg = MsgCodeMap[-1]
-		}
-	}
-	m := Message{
-		Code:   code,
-		Status: status,
-		Msg:    msg,
-		Data:   data,
-	}
-	return m
+	return Message{code, status, msg, data}
 }
 
-func GetCodeMsg(code int) string {
-	if val, ok := MsgCodeMap[code]; ok {
-		return val
-	}
-	return MsgCodeMap[-1]
+// CodeMsg 匹配状态码和信息
+func CodeMsg(status bool, code int, data interface{}) Message {
+	return Message{code, status, MsgCodeMap[code], data}
 }
