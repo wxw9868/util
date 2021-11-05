@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -19,7 +20,7 @@ type Captcha struct {
 
 func register(c *gin.Context) {
 	r := new(RegisterRequest)
-	if err := NewValidate("label").Error(r); err != nil {
+	if err := NewValidate("label").StructError(r); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"data":   nil,
 			"code":   0,
@@ -41,4 +42,18 @@ func TestGetValidate(t *testing.T) {
 	engine := gin.Default()
 	engine.POST("/register", register)
 	_ = engine.Run()
+}
+
+func TestField(t *testing.T) {
+	myEmail := "wxw9868"
+	if err := NewValidate("label").FieldError(myEmail, "required,email"); err != nil {
+		fmt.Println(err)
+	}
+}
+
+func TestGetValidateTrans(t *testing.T) {
+	v, trans, err := NewValidate("").GetValidateTrans()
+	fmt.Println(v)
+	fmt.Println(trans)
+	fmt.Println(err)
 }

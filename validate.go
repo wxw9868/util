@@ -14,7 +14,6 @@ import (
 
 type Validate struct {
 	tag      string
-	s        interface{}
 	validate *validator.Validate
 	trans    ut.Translator
 }
@@ -25,8 +24,8 @@ func NewValidate(tag string) *Validate {
 	}
 }
 
-// GetValidate 数据验证器
-func (v *Validate) GetValidate(tag string) (err error) {
+// Validate 数据验证器
+func (v *Validate) initValidate(tag string) (err error) {
 	var ok bool
 	v.trans, ok = ut.New(zh.New(), zh.New()).GetTranslator("zh")
 	if !ok {
@@ -46,11 +45,39 @@ func (v *Validate) GetValidate(tag string) (err error) {
 	return
 }
 
-func (v *Validate) Error(s interface{}) error {
-	if err := v.GetValidate(v.tag); err != nil {
+// GetValidateTrans 获取配置
+func (v *Validate) GetValidateTrans() (*validator.Validate, ut.Translator, error) {
+	if err := v.initValidate(v.tag); err != nil {
+		return nil, nil, err
+	}
+	return v.validate, v.trans, nil
+}
+
+// StructError 结构体验证
+func (v *Validate) StructError(s interface{}) error {
+	if err := v.initValidate(v.tag); err != nil {
 		return err
 	}
 	if err := v.validate.Struct(s); err != nil {
+		var buffer bytes.Buffer
+		if validationErrors, ok := err.(validator.ValidationErrors); !ok {
+			return err
+		} else {
+			for _, e := range validationErrors {
+				buffer.WriteString(e.Translate(v.trans) + ";")
+			}
+		}
+		return errors.New(buffer.String())
+	}
+	return nil
+}
+
+// FieldError 字段验证
+func (v *Validate) FieldError(field interface{}, tag string) error {
+	if err := v.initValidate(v.tag); err != nil {
+		return err
+	}
+	if err := v.validate.Var(field, tag); err != nil {
 		var buffer bytes.Buffer
 		if validationErrors, ok := err.(validator.ValidationErrors); !ok {
 			return err
