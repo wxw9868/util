@@ -3,6 +3,7 @@ package alibaba
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/dysmsapi"
 )
@@ -26,7 +27,7 @@ func NewSMS(regionID, accessKeyID, accessKeySecret, signName, templateCode strin
 }
 
 // SendSMS 发送验阿里云证码
-func (sms *SMS) SendSMS(mobile string, code string) error {
+func (sms *SMS) SendSMS(mobile string, code int) error {
 	client, err := dysmsapi.NewClientWithAccessKey(sms.RegionID, sms.AccessKeyID, sms.AccessKeySecret)
 	if err != nil {
 		return err
@@ -37,7 +38,7 @@ func (sms *SMS) SendSMS(mobile string, code string) error {
 	request.PhoneNumbers = mobile
 	request.SignName = sms.SignName
 	request.TemplateCode = sms.TemplateCode
-	request.TemplateParam = "{\"code\":" + code + "}"
+	request.TemplateParam = "{\"code\":" + strconv.Itoa(code) + "}"
 	response, err := client.SendSms(request)
 	if err != nil {
 		return fmt.Errorf("短信发送失败：%s", err)
