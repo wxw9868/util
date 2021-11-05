@@ -31,7 +31,7 @@ func TestMail(t *testing.T) {
 func DoSendMail(email, content, captcha string) error {
 	fromMail := "986845663@qq.com"
 	config := `{"username":"986845663@qq.com","password":"emtpyouqirhebfij","host":"smtp.qq.com","port":587}`
-	mail := NewEMail(config)
+	mail := NewEmail(config)
 	if mail.Username != "986845663@qq.com" {
 		return errors.New("email parse get username error")
 	}

@@ -68,9 +68,9 @@ type Attachment struct {
 	Content  []byte
 }
 
-// NewEMail create new Email struct with config json.
+// NewEmail create new Email struct with config json.
 // config json is followed from Email struct fields.
-func NewEMail(config string) *Email {
+func NewEmail(config string) *Email {
 	e := new(Email)
 	e.Headers = textproto.MIMEHeader{}
 	err := json.Unmarshal([]byte(config), e)

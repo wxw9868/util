@@ -119,6 +119,30 @@ func GenerateCode(width int) string {
 	return b.String()
 }
 
+// StringBuilder 拼接字符串
+func StringBuilder(s1, s2 string) string {
+	// strings.Builder的0值可以直接使用
+	var builder strings.Builder
+
+	// 向builder中写入字符/字符串
+	builder.Write([]byte(s1))
+	builder.WriteByte(' ')
+	builder.WriteString(s2)
+
+	// String() 方法获得拼接的字符串
+	return builder.String()
+}
+
+// INITCAP 将用符号链接的英文字符的首字符转换为大写
+func INITCAP(s, sep string) string {
+	list := strings.Split(s, sep)
+	var str string
+	for j := 0; j < len(list); j++ {
+		str += strings.Title(list[j])
+	}
+	return str
+}
+
 // 自增ID
 var autoincrementsID uint64 = uint64(rand.New(rand.NewSource(time.Now().Unix())).Int63n(10000))
 var mutex sync.Mutex
