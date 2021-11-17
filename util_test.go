@@ -27,6 +27,10 @@ func TestVerifyMobile(t *testing.T) {
 	fmt.Println(VerifyMobile("18201108888"))
 }
 
+func TestVerifyTelephone(t *testing.T) {
+	fmt.Println(VerifyTelephone("028-02866250077"))
+}
+
 func TestVerifyString(t *testing.T) {
 	fmt.Println(VerifyString("18201108888"))
 }

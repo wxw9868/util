@@ -61,6 +61,13 @@ func VerifyMobile(str string) bool {
 	return matched
 }
 
+// VerifyTelephone 座机号格式校验
+func VerifyTelephone(str string) bool {
+	pattern := "^((0\\d{2,3})-)(\\d{7,8})(-(\\d{3,}))?$" //比如：028-02866250077或0312-4295xxx的格式
+	matched, _ := regexp.MatchString(pattern, str)
+	return matched
+}
+
 // VerifyString 验证字符串
 func VerifyString(sn string) bool {
 	isSN := regexp.MustCompile("^[A-Za-z0-9]+$") //匹配数字和英文的匹配规则
