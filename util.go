@@ -151,15 +151,15 @@ func INITCAP(s, sep string) string {
 }
 
 // 自增ID
-var autoincrementsID uint64 = uint64(rand.New(rand.NewSource(time.Now().Unix())).Int63n(10000))
+var autoincrementID = uint64(rand.New(rand.NewSource(time.Now().Unix())).Int63n(10000))
 var mutex sync.Mutex
 
 // GenerateOrderSN 订单ID
 func GenerateOrderSN() string {
 	mutex.Lock()
-	id := atomic.AddUint64(&autoincrementsID, 1)
+	id := atomic.AddUint64(&autoincrementID, 1)
 	if id > 9999 {
-		autoincrementsID = 0
+		autoincrementID = 0
 	}
 	mutex.Unlock()
 	return fmt.Sprintf("%s%04d", time.Now().Format("20060102"), id)

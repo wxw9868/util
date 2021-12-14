@@ -65,3 +65,11 @@ func TestGenerateCode(t *testing.T) {
 func TestGetOrderID(t *testing.T) {
 	fmt.Println(GenerateOrderSN())
 }
+
+func TestStringBuilder(t *testing.T) {
+	fmt.Println(StringBuilder("a", "b"))
+}
+
+func TestINITCAP(t *testing.T) {
+	fmt.Println(INITCAP("a", "b"))
+}
