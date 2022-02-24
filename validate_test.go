@@ -57,3 +57,7 @@ func TestGetValidateTrans(t *testing.T) {
 	fmt.Println(trans)
 	fmt.Println(err)
 }
+
+func TestVideoFileMode(t *testing.T) {
+	VideoFileMode("mp4")
+}

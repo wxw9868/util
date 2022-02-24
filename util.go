@@ -86,6 +86,12 @@ func VerifyFloat2f(str string) bool {
 	return matched
 }
 
+// VerifyFloat 验证浮点数最多有两位小数
+func VerifyFloat(f interface{}) bool {
+	isNum := regexp.MustCompile(`^\d+.?\d{0,2}$`)
+	return isNum.MatchString(fmt.Sprint(f))
+}
+
 func VerifyName(name string) bool {
 	isChinese := regexp.MustCompile("^[\u4e00-\u9fa5]{2,10}") //匹配中文的匹配规则
 	isEnglish := regexp.MustCompile("^[a-zA-Z]{3,30}")        //匹配英文的匹配规则
@@ -163,4 +169,17 @@ func GenerateOrderSN() string {
 	}
 	mutex.Unlock()
 	return fmt.Sprintf("%s%04d", time.Now().Format("20060102"), id)
+}
+
+// VideoFileMode 视频文件类型
+func VideoFileMode(ext string) bool {
+	exts := map[string]struct{}{
+		"mp4": {}, "swf": {}, "flv": {},
+		"rm": {}, "ram": {}, "mov": {},
+		"mpg": {}, "mpeg": {}, "wmv": {}, "avi": {},
+	}
+	if _, ok := exts[ext]; ok {
+		return ok
+	}
+	return false
 }
