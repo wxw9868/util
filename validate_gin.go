@@ -13,7 +13,7 @@ import (
 	translation "github.com/go-playground/validator/v10/translations/zh"
 )
 
-func (v *Validate) initValidateGin() {
+func (v *Validate) InitValidateGin() {
 	v.trans, _ = ut.New(zh.New()).GetTranslator("zh")
 	v.validate = binding.Validator.Engine().(*validator.Validate)
 	//注册一个函数，获取struct tag里自定义的label作为字段名
