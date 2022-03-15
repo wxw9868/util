@@ -111,15 +111,14 @@ func GenerateCaptcha(param configJsonBody) (body map[string]interface{}) {
 	return
 }
 
-func Verify(Id, VerifyValue string) map[string]interface{} {
+func Verify(Id, VerifyValue string) bool {
 	param := configJsonBody{
 		Id:          Id,
 		VerifyValue: VerifyValue,
 	}
 	//verify the captcha
-	body := map[string]interface{}{"code": 0, "msg": "failed"}
 	if store.Verify(param.Id, param.VerifyValue, true) {
-		body = map[string]interface{}{"code": 1, "msg": "ok"}
+		return true
 	}
-	return body
+	return false
 }
