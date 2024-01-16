@@ -21,24 +21,13 @@ type Captcha struct {
 func register(c *gin.Context) {
 	r := new(RegisterRequest)
 	if err := NewValidate("label").StructError(r); err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"data":   nil,
-			"code":   0,
-			"status": false,
-			"msg":    err.Error(),
-		})
+		c.JSON(http.StatusNotFound, Msg(false, 0, err.Error(), nil))
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"data":   nil,
-		"code":   1,
-		"status": true,
-		"msg":    "注册成功",
-	})
-	return
+	c.JSON(http.StatusOK, Msg(true, 1, "注册成功", nil))
 }
 
-func TestGetValidate(t *testing.T) {
+func TestNewValidate(t *testing.T) {
 	engine := gin.Default()
 	engine.POST("/register", register)
 	_ = engine.Run()
@@ -53,11 +42,10 @@ func TestField(t *testing.T) {
 
 func TestGetValidateTrans(t *testing.T) {
 	v, trans, err := NewValidate("").GetValidateTrans()
-	fmt.Println(v)
-	fmt.Println(trans)
-	fmt.Println(err)
+	fmt.Println(v, trans, err)
 }
 
 func TestVideoFileMode(t *testing.T) {
-	VideoFileMode("mp4")
+	ok := VideoFileMode("mp4")
+	fmt.Println(ok)
 }

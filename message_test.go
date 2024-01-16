@@ -15,6 +15,10 @@ func TestFail(t *testing.T) {
 	fmt.Println(res)
 }
 
+func TestMsg(t *testing.T) {
+	Msg(true, 1, "成功", nil)
+}
+
 func TestCodeMsg(t *testing.T) {
 	res := CodeMsg(false, CodeError, nil)
 	fmt.Println(res)

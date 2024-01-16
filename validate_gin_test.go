@@ -6,9 +6,9 @@ import (
 	"testing"
 )
 
-func TestName(t *testing.T) {
+func TestNewValidate_Gin(t *testing.T) {
 	v := NewValidate("json")
-	v.initValidateGin()
+	v.InitValidateGin()
 	s := v.GinError(errors.New("error"))
 	fmt.Println(s)
 	myEmail := "wxw9868"

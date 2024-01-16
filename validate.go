@@ -18,6 +18,7 @@ type Validate struct {
 	trans    ut.Translator
 }
 
+// NewValidate 初始化 Validate
 func NewValidate(tag string) *Validate {
 	return &Validate{
 		tag: tag,

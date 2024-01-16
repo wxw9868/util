@@ -29,9 +29,10 @@ func DataEncryption(password string) (string, error) {
 
 // VerifyPassword 密码必须由字⺟、数字和_~!.@#$%^&*?-符号组成，长度为6 ~ 20个字符
 // pattern := `^[\d|a-zA-Z]+[\d|a-zA-Z]+[_~!.@#$%^&*?-]+$`
-// if len(str) < 6 || len(str) > 20 {
-// 	return errors.New("密码长度为6 ~ 20个字符")
-// }
+//
+//	if len(str) < 6 || len(str) > 20 {
+//		return errors.New("密码长度为6 ~ 20个字符")
+//	}
 func VerifyPassword(str string) error {
 	pattern := `^[a-zA-Z0-9_~!.@#$%^&*?-]{6,20}$`
 	if b, _ := regexp.MatchString(pattern, str); !b {
