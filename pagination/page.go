@@ -39,6 +39,14 @@ func (p *Paginator) SetCurrentPage(currentPage int) {
 }
 
 // TotalPage 总页数
+func (p *Paginator) TotalCount() int {
+	if p.totalCount > 0 {
+		return p.totalCount
+	}
+	return p.totalCount
+}
+
+// TotalPage 总页数
 func (p *Paginator) TotalPage() int {
 	if p.totalPage > 0 {
 		return p.totalPage
