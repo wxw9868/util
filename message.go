@@ -15,7 +15,7 @@ var MsgCodeMap = map[int]string{
 type Message struct {
 	Code   int         `json:"code"`
 	Status bool        `json:"status"`
-	Msg    string      `json:"message"`
+	Msg    string      `json:"msg"`
 	Data   interface{} `json:"data"`
 }
 
