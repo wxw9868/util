@@ -1,15 +1,9 @@
 package util
 
-const (
-	CodeSuccess = 1
-	CodeFail    = 0
-	CodeError   = -1
-)
-
 var MsgCodeMap = map[int]string{
-	CodeSuccess: "success",
-	CodeFail:    "fail",
-	CodeError:   "unknown error",
+	1:  "SUCCESS",
+	0:  "FAIL",
+	-1: "UNKNOWN ERROR",
 }
 
 type Message struct {
@@ -21,12 +15,12 @@ type Message struct {
 
 // Success 默认成功
 func Success(msg string, data interface{}) Message {
-	return Msg(true, CodeSuccess, msg, data)
+	return Msg(true, 1, msg, data)
 }
 
 // Fail 默认失败
 func Fail(msg string) Message {
-	return Msg(false, CodeFail, msg, nil)
+	return Msg(false, 0, msg, nil)
 }
 
 // Msg 序列化消息

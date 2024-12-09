@@ -1,4 +1,4 @@
-package alibaba
+package sms
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/dysmsapi"
 )
 
-type SMS struct {
+type AliyunSMS struct {
 	RegionID        string
 	AccessKeyID     string
 	AccessKeySecret string
@@ -16,8 +16,8 @@ type SMS struct {
 	TemplateCode    string
 }
 
-func NewSMS(regionID, accessKeyID, accessKeySecret, signName, templateCode string) *SMS {
-	return &SMS{
+func NewAliyunSMS(regionID, accessKeyID, accessKeySecret, signName, templateCode string) *AliyunSMS {
+	return &AliyunSMS{
 		RegionID:        regionID,
 		AccessKeyID:     accessKeyID,
 		AccessKeySecret: accessKeySecret,
@@ -27,7 +27,7 @@ func NewSMS(regionID, accessKeyID, accessKeySecret, signName, templateCode strin
 }
 
 // SendSMS 发送验阿里云证码
-func (sms *SMS) SendSMS(mobile string, code int) error {
+func (sms *AliyunSMS) SendSMS(mobile string, code int) error {
 	client, err := dysmsapi.NewClientWithAccessKey(sms.RegionID, sms.AccessKeyID, sms.AccessKeySecret)
 	if err != nil {
 		return err
@@ -44,7 +44,6 @@ func (sms *SMS) SendSMS(mobile string, code int) error {
 		return fmt.Errorf("短信发送失败：%s", err)
 	}
 	if response.Code != "OK" || response.Message != "OK" {
-		fmt.Println("message: ", response.Message, "code: ", response.Code)
 		return errors.New("短信发送失败！")
 	}
 	return nil

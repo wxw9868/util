@@ -23,12 +23,12 @@ func TestMail(t *testing.T) {
 	captcha := "123456"
 	email := "wxw9868@163.com"
 	content := "注册账号"
-	err := DoSendMail(email, content, captcha)
+	err := sendMail(email, content, captcha)
 	t.Fatal(err)
 }
 
-// DoSendMail 发送邮件
-func DoSendMail(email, content, captcha string) error {
+// sendMail 发送邮件
+func sendMail(email, content, captcha string) error {
 	fromMail := "986845663@qq.com"
 	config := `{"username":"986845663@qq.com","password":"emtpyouqirhebfij","host":"smtp.qq.com","port":587}`
 	mail := NewEmail(config)

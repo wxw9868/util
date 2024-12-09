@@ -20,6 +20,6 @@ func TestMsg(t *testing.T) {
 }
 
 func TestCodeMsg(t *testing.T) {
-	res := CodeMsg(false, CodeError, nil)
+	res := CodeMsg(false, -1, nil)
 	fmt.Println(res)
 }

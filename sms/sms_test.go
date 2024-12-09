@@ -1,4 +1,4 @@
-package alibaba
+package sms
 
 import (
 	"fmt"
@@ -6,8 +6,7 @@ import (
 )
 
 func TestSendSMS(t *testing.T) {
-	err := NewSMS("", "", "", "", "").
-		SendSMS("18200001111", 123456)
+	err := NewAliyunSMS("", "", "", "", "").SendSMS("18200001111", 123456)
 	if err != nil {
 		fmt.Println(err)
 	}

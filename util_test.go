@@ -5,13 +5,13 @@ import (
 	"testing"
 )
 
-func TestDataEncryption(t *testing.T) {
-	str, err := DataEncryption("zh1234567")
-	fmt.Println(str, err)
+func TestEncrypt(t *testing.T) {
+	password, err := NewPassword("wxw9868").Encrypt("123456")
+	fmt.Printf("password: %s, err: %s\n", password, err)
 }
 
 func TestVerifyPassword(t *testing.T) {
-	err := VerifyPassword("99999.")
+	err := VerifyPassword("123456*")
 	fmt.Println(err)
 }
 

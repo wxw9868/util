@@ -14,17 +14,30 @@ import (
 	"golang.org/x/crypto/scrypt"
 )
 
-// DataEncryption 数据加密
-func DataEncryption(password string) (string, error) {
-	// DO NOT use this salt value; generate your own random salt. 8 bytes is
-	// a good length.
-	salt := []byte{0xc7, 0x29, 0xd2, 0x98, 0xb7, 0x7a, 0xcd, 0x7b}
+// Password 密码类
+type Password struct {
+	Salt string
+}
 
-	dk, err := scrypt.Key([]byte(password), salt, 1<<15, 8, 1, 32)
+func NewPassword(salt string) *Password {
+	return &Password{salt}
+}
+
+// Encrypt 数据加密
+func (p *Password) Encrypt(password string) (string, error) {
+	dk, err := scrypt.Key([]byte(password), []byte(p.Salt), 1<<15, 8, 1, 32)
 	if err != nil {
 		return "", err
 	}
 	return base64.StdEncoding.EncodeToString(dk), nil
+}
+
+// Compare 数据比较
+func (p *Password) Compare(a, b string) bool {
+	if r := strings.Compare(a, b); r != 0 {
+		return false
+	}
+	return true
 }
 
 // VerifyPassword 密码必须由字⺟、数字和_~!.@#$%^&*?-符号组成，长度为6 ~ 20个字符
@@ -125,7 +138,7 @@ func GetNowTime(timezone, value string) time.Time {
 func GenerateCode(width int) string {
 	numeric := [9]int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	r := len(numeric)
-	rand.Seed(time.Now().UnixNano())
+	rand.New(rand.NewSource(time.Now().UnixNano()))
 	var b strings.Builder
 	for i := 0; i < width; i++ {
 		_, _ = fmt.Fprintf(&b, "%d", numeric[rand.Intn(r)])
@@ -152,7 +165,7 @@ func INITCAP(s, sep string) string {
 	list := strings.Split(s, sep)
 	var str string
 	for j := 0; j < len(list); j++ {
-		str += strings.Title(list[j])
+		str += strings.ToTitle(list[j])
 	}
 	return str
 }

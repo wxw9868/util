@@ -7,8 +7,8 @@ import (
 )
 
 func ExampleDataEncryption() {
-	str, err := util.DataEncryption("zh1234567")
-	fmt.Println(str, err)
+	password, err := util.NewPassword("wxw9868").Encrypt("123456")
+	fmt.Printf("password: %s, err: %s\n", password, err)
 }
 
 func ExampleVerifyPassword() {
