@@ -1,14 +1,17 @@
+/*
+ * @Author: wxw9868 wxw9868@163.com
+ * @Date: 2024-01-16 16:49:11
+ * @LastEditors: wxw9868 wxw9868@163.com
+ * @LastEditTime: 2025-01-10 18:01:34
+ * @FilePath: /util/util_test.go
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 package util
 
 import (
 	"fmt"
 	"testing"
 )
-
-func TestEncrypt(t *testing.T) {
-	password, err := NewPassword("wxw9868").Encrypt("123456")
-	fmt.Printf("password: %s, err: %s\n", password, err)
-}
 
 func TestVerifyPassword(t *testing.T) {
 	err := VerifyPassword("123456*")

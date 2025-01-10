@@ -1,8 +1,14 @@
+/*
+ * @Author: wxw9868 wxw9868@163.com
+ * @Date: 2024-01-16 20:03:58
+ * @LastEditors: wxw9868 wxw9868@163.com
+ * @LastEditTime: 2025-01-10 17:51:09
+ * @FilePath: /util/example_validate_test.go
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 package util_test
 
 import (
-	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -32,34 +38,4 @@ func register(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, util.Msg(true, 1, "注册成功", nil))
-}
-
-func ExampleField() {
-	myEmail := "wxw9868"
-	if err := util.NewValidate("label").FieldError(myEmail, "required,email"); err != nil {
-		fmt.Println(err)
-	}
-}
-
-func ExampleGetValidateTrans() {
-	v, trans, err := util.NewValidate("").GetValidateTrans()
-	fmt.Println(v)
-	fmt.Println(trans)
-	fmt.Println(err)
-}
-
-func ExampleVideoFileMode() {
-	util.VideoFileMode("mp4")
-	// Output:
-	// true
-}
-
-func ExampleNewValidate_Gin() {
-	v := util.NewValidate("json")
-	v.InitValidateGin()
-	s := v.GinError(errors.New("error"))
-	fmt.Println(s)
-	myEmail := "wxw9868"
-	f := v.GinVar(myEmail, "required,email")
-	fmt.Println(f)
 }

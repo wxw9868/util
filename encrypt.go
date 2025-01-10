@@ -5,10 +5,40 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/md5"
+	"encoding/base64"
 	"encoding/hex"
 	"errors"
 	"io"
+	"strings"
+
+	"golang.org/x/crypto/scrypt"
 )
+
+// Password 密码类
+type Password struct {
+	Salt string
+}
+
+func NewPassword(salt string) *Password {
+	return &Password{salt}
+}
+
+// Encrypt 数据加密
+func (p *Password) Encrypt(password string) (string, error) {
+	dk, err := scrypt.Key([]byte(password), []byte(p.Salt), 1<<15, 8, 1, 32)
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(dk), nil
+}
+
+// Compare 数据比较
+func (p *Password) Compare(a, b string) bool {
+	if r := strings.Compare(a, b); r != 0 {
+		return false
+	}
+	return true
+}
 
 // AesEncrypt 实现加密
 func AesEncrypt(origData []byte, key []byte) ([]byte, error) {

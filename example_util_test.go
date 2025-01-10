@@ -1,3 +1,11 @@
+/*
+ * @Author: wxw9868 wxw9868@163.com
+ * @Date: 2024-01-16 19:59:35
+ * @LastEditors: wxw9868 wxw9868@163.com
+ * @LastEditTime: 2025-01-10 17:51:17
+ * @FilePath: /util/example_util_test.go
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 package util_test
 
 import (
@@ -5,11 +13,6 @@ import (
 
 	"github.com/wxw9868/util"
 )
-
-func ExampleDataEncryption() {
-	password, err := util.NewPassword("wxw9868").Encrypt("123456")
-	fmt.Printf("password: %s, err: %s\n", password, err)
-}
 
 func ExampleVerifyPassword() {
 	err := util.VerifyPassword("99999.")
@@ -61,10 +64,6 @@ func ExampleGenerateCode() {
 		code := util.GenerateCode(6)
 		fmt.Println(code)
 	}
-}
-
-func ExampleGetOrderID() {
-	fmt.Println(util.GenerateOrderSN())
 }
 
 func ExampleStringBuilder() {

@@ -1,3 +1,11 @@
+/*
+ * @Author: wxw9868 wxw9868@163.com
+ * @Date: 2024-01-16 16:53:26
+ * @LastEditors: wxw9868 wxw9868@163.com
+ * @LastEditTime: 2025-01-10 18:07:35
+ * @FilePath: /util/file.go
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 package util
 
 import (
@@ -59,13 +67,13 @@ func SaveUploadedFile(file *multipart.FileHeader, dst string) error {
 }
 
 // PathExists 文件目录是否存在
-func PathExists(path string) (bool, error) {
+func PathExists(path string) bool {
 	_, err := os.Stat(path)
-	if err == nil {
-		return true, nil
+	if err != nil {
+		return false
 	}
 	if os.IsNotExist(err) {
-		return false, nil
+		return false
 	}
-	return false, err
+	return true
 }

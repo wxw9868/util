@@ -3,7 +3,6 @@ package util
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"reflect"
 
 	"github.com/go-playground/locales/zh"
@@ -26,7 +25,7 @@ func NewValidate(tag string) *Validate {
 }
 
 // Validate 数据验证器
-func (v *Validate) initValidate(tag string) (err error) {
+func (v *Validate) initValidate(tag string) error {
 	var ok bool
 	v.trans, ok = ut.New(zh.New(), zh.New()).GetTranslator("zh")
 	if !ok {
@@ -39,11 +38,7 @@ func (v *Validate) initValidate(tag string) (err error) {
 	})
 
 	// 注册翻译器
-	err = zhcn.RegisterDefaultTranslations(v.validate, v.trans)
-	if err != nil {
-		return errors.New(fmt.Sprintf("注册翻译器失败：%s", err))
-	}
-	return
+	return zhcn.RegisterDefaultTranslations(v.validate, v.trans)
 }
 
 // GetValidateTrans 获取配置

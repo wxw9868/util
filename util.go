@@ -1,7 +1,6 @@
 package util
 
 import (
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -10,35 +9,7 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"golang.org/x/crypto/scrypt"
 )
-
-// Password 密码类
-type Password struct {
-	Salt string
-}
-
-func NewPassword(salt string) *Password {
-	return &Password{salt}
-}
-
-// Encrypt 数据加密
-func (p *Password) Encrypt(password string) (string, error) {
-	dk, err := scrypt.Key([]byte(password), []byte(p.Salt), 1<<15, 8, 1, 32)
-	if err != nil {
-		return "", err
-	}
-	return base64.StdEncoding.EncodeToString(dk), nil
-}
-
-// Compare 数据比较
-func (p *Password) Compare(a, b string) bool {
-	if r := strings.Compare(a, b); r != 0 {
-		return false
-	}
-	return true
-}
 
 // VerifyPassword 密码必须由字⺟、数字和_~!.@#$%^&*?-符号组成，长度为6 ~ 20个字符
 // pattern := `^[\d|a-zA-Z]+[\d|a-zA-Z]+[_~!.@#$%^&*?-]+$`
@@ -47,63 +18,54 @@ func (p *Password) Compare(a, b string) bool {
 //		return errors.New("密码长度为6 ~ 20个字符")
 //	}
 func VerifyPassword(str string) error {
-	pattern := `^[a-zA-Z0-9_~!.@#$%^&*?-]{6,20}$`
-	if b, _ := regexp.MatchString(pattern, str); !b {
+	if !regexp.MustCompile(`^[a-zA-Z0-9_~!.@#$%^&*?-]{6,20}$`).MatchString(str) {
 		return errors.New("密码由字⺟、数字和符号（_~!.@#$%^&*?-）组成，长度为6 ~ 20个字符")
 	}
 	return nil
 }
 
 // VerifyPayPassword 支付密码验证规则:6个数字
-func VerifyPayPassword(str string) (bool, error) {
-	matched, err := regexp.MatchString(`^\d{6}$`, str)
-	if err != nil {
-		return false, err
+func VerifyPayPassword(str string) error {
+	if !regexp.MustCompile(`^\d{6}$`).MatchString(str) {
+		return errors.New("支付密码由长度为6数字组成")
 	}
-	return matched, nil
+	return nil
 }
 
 // VerifyEmail 验证邮箱
 func VerifyEmail(str string) bool {
-	matched, _ := regexp.MatchString(`\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`, str)
-	return matched
+	return regexp.MustCompile(`\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`).MatchString(str)
 }
 
 // VerifyMobile 验证手机号
 func VerifyMobile(str string) bool {
-	matched, _ := regexp.MatchString(`^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]|17[0-9])\d{8}$`, str)
-	return matched
+	return regexp.MustCompile(`^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]|17[0-9])\d{8}$`).MatchString(str)
 }
 
 // VerifyTelephone 座机号格式校验
 func VerifyTelephone(str string) bool {
-	pattern := "^((0\\d{2,3})-)(\\d{7,8})(-(\\d{3,}))?$" //比如：028-02866250077或0312-4295xxx的格式
-	matched, _ := regexp.MatchString(pattern, str)
-	return matched
+	return regexp.MustCompile(`^((0\\d{2,3})-)(\\d{7,8})(-(\\d{3,}))?$`).MatchString(str)
 }
 
 // VerifyString 验证字符串
 func VerifyString(sn string) bool {
-	isSN := regexp.MustCompile("^[A-Za-z0-9]+$") //匹配数字和英文的匹配规则
-	return isSN.MatchString(sn)
+	//匹配数字和英文的匹配规则
+	return regexp.MustCompile("^[A-Za-z0-9]+$").MatchString(sn)
 }
 
 // VerifyEnglish 验证字符串是否全为英文
 func VerifyEnglish(str string) bool {
-	matched, _ := regexp.MatchString(`^[a-zA-Z]+$`, str)
-	return matched
+	return regexp.MustCompile(`^[a-zA-Z]+$`).MatchString(str)
 }
 
 // VerifyFloat2f 验证浮点数最多有两位小数
 func VerifyFloat2f(str string) bool {
-	matched, _ := regexp.MatchString(`^(([1-9]{1}\d*)|([0]{1}))(\.(\d){0,2})?$`, str)
-	return matched
+	return regexp.MustCompile(`^(([1-9]{1}\d*)|([0]{1}))(\.(\d){0,2})?$`).MatchString(str)
 }
 
 // VerifyFloat 验证浮点数最多有两位小数
 func VerifyFloat(f interface{}) bool {
-	isNum := regexp.MustCompile(`^\d+.?\d{0,2}$`)
-	return isNum.MatchString(fmt.Sprint(f))
+	return regexp.MustCompile(`^\d+.?\d{0,2}$`).MatchString(fmt.Sprint(f))
 }
 
 func VerifyName(name string) bool {
