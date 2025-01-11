@@ -54,6 +54,10 @@ func TestVerifyFloat2f(t *testing.T) {
 	fmt.Println(VerifyFloat2f("1.11"))
 }
 
+func TestVerifyFloat(t *testing.T) {
+	fmt.Println(VerifyFloat("1.11"))
+}
+
 func TestGetNowTime(t *testing.T) {
 	fmt.Println(GetNowTime("Asia/Shanghai", "2021-09-30 15:58:17"))
 }

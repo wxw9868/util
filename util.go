@@ -38,6 +38,7 @@ func VerifyEmail(str string) bool {
 }
 
 // VerifyMobile 验证手机号
+//goland:noinspection RegExpDuplicateCharacterInClass
 func VerifyMobile(str string) bool {
 	return regexp.MustCompile(`^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]|17[0-9])\d{8}$`).MatchString(str)
 }
@@ -60,6 +61,7 @@ func VerifyEnglish(str string) bool {
 
 // VerifyFloat2f 验证浮点数最多有两位小数
 func VerifyFloat2f(str string) bool {
+	//goland:noinspection RegExpSimplifiable
 	return regexp.MustCompile(`^(([1-9]{1}\d*)|([0]{1}))(\.(\d){0,2})?$`).MatchString(str)
 }
 
