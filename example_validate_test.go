@@ -2,7 +2,7 @@
  * @Author: wxw9868 wxw9868@163.com
  * @Date: 2024-01-16 20:03:58
  * @LastEditors: wxw9868 wxw9868@163.com
- * @LastEditTime: 2025-01-10 17:51:09
+ * @LastEditTime: 2025-01-13 15:31:39
  * @FilePath: /util/example_validate_test.go
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,8 +34,8 @@ func ExampleNewValidate() {
 func register(c *gin.Context) {
 	r := new(RegisterRequest)
 	if err := util.NewValidate("label").StructError(r); err != nil {
-		c.JSON(http.StatusNotFound, util.Msg(false, 0, err.Error(), nil))
+		c.JSON(http.StatusNotFound, util.Msg(0, err.Error(), nil))
 		return
 	}
-	c.JSON(http.StatusOK, util.Msg(true, 1, "注册成功", nil))
+	c.JSON(http.StatusOK, util.Msg(1, "注册成功", nil))
 }

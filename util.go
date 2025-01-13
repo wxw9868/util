@@ -12,12 +12,10 @@ import (
 )
 
 // VerifyPassword 密码必须由字⺟、数字和_~!.@#$%^&*?-符号组成，长度为6 ~ 20个字符
-// pattern := `^[\d|a-zA-Z]+[\d|a-zA-Z]+[_~!.@#$%^&*?-]+$`
-//
-//	if len(str) < 6 || len(str) > 20 {
-//		return errors.New("密码长度为6 ~ 20个字符")
-//	}
 func VerifyPassword(str string) error {
+	if len(str) < 6 || len(str) > 20 {
+		return errors.New("密码长度为6 ~ 20个字符")
+	}
 	if !regexp.MustCompile(`^[a-zA-Z0-9_~!.@#$%^&*?-]{6,20}$`).MatchString(str) {
 		return errors.New("密码由字⺟、数字和符号（_~!.@#$%^&*?-）组成，长度为6 ~ 20个字符")
 	}
@@ -42,7 +40,7 @@ func VerifyMobile(str string) bool {
 	return regexp.MustCompile(`^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9]|17[0-9])\d{8}$`).MatchString(str)
 }
 
-// VerifyTelephone 座机号格式校验
+// VerifyTelephone 验证座机电话号
 func VerifyTelephone(str string) bool {
 	return regexp.MustCompile(`^((0\\d{2,3})-)(\\d{7,8})(-(\\d{3,}))?$`).MatchString(str)
 }
@@ -58,17 +56,18 @@ func VerifyEnglish(str string) bool {
 	return regexp.MustCompile(`^[a-zA-Z]+$`).MatchString(str)
 }
 
-// VerifyFloat2f 验证浮点数最多有两位小数
-func VerifyFloat2f(str string) bool {
-	return regexp.MustCompile(`^(([1-9]{1}\d*)|([0]{1}))(\.(\d){0,2})?$`).MatchString(str)
-}
-
 // VerifyFloat 验证浮点数最多有两位小数
 func VerifyFloat(f interface{}) bool {
 	return regexp.MustCompile(`^\d+.?\d{0,2}$`).MatchString(fmt.Sprint(f))
 }
 
-func VerifyName(name string) bool {
+// VerifyFloat2f 验证浮点数最多有两位小数
+func VerifyFloat2f(str string) bool {
+	return regexp.MustCompile(`^(([1-9]{1}\d*)|([0]{1}))(\.(\d){0,2})?$`).MatchString(str)
+}
+
+// VerifyNickname 验证昵称
+func VerifyNickname(name string) bool {
 	isChinese := regexp.MustCompile("^[\u4e00-\u9fa5]{2,10}") //匹配中文的匹配规则
 	isEnglish := regexp.MustCompile("^[a-zA-Z]{3,30}")        //匹配英文的匹配规则
 	//使用MatchString来将要匹配的字符串传到匹配规则中
@@ -76,24 +75,6 @@ func VerifyName(name string) bool {
 		return true
 	}
 	return false
-}
-
-func FormatToUnix(str string) int64 {
-	const longForm = "2006-01-02 15:04:05"
-	loc, _ := time.LoadLocation("UTC")
-	t, _ := time.ParseInLocation(longForm, str, loc)
-	return t.Unix()
-}
-
-// GetNowTime 获取对应时区的实时时间
-func GetNowTime(timezone, value string) time.Time {
-	if timezone == "" {
-		timezone = "Asia/Shanghai"
-	}
-	loc, _ := time.LoadLocation(timezone)
-	const longForm = "2006-01-02 15:04:05"
-	t, _ := time.ParseInLocation(longForm, value, loc)
-	return t
 }
 
 // GenerateCode 生成6位数字码
@@ -147,15 +128,49 @@ func GenerateOrderSN() string {
 	return fmt.Sprintf("%s%04d", time.Now().Format("20060102"), id)
 }
 
-// VideoFileMode 视频文件类型
-func VideoFileMode(ext string) bool {
-	exts := map[string]struct{}{
-		"mp4": {}, "swf": {}, "flv": {},
-		"rm": {}, "ram": {}, "mov": {},
-		"mpg": {}, "mpeg": {}, "wmv": {}, "avi": {},
+// LocNowTime 获取对应时区的实时时间
+func LocNowTime(timezone, value string) time.Time {
+	if timezone == "" {
+		timezone = "Asia/Shanghai"
 	}
-	if _, ok := exts[ext]; ok {
-		return ok
+	loc, _ := time.LoadLocation(timezone)
+	const longForm = "2006-01-02 15:04:05"
+	t, _ := time.ParseInLocation(longForm, value, loc)
+	return t
+}
+
+// StartTime 指定时间
+func StartTime(tt string) (d time.Time) {
+	year, month, day := time.Now().Date()
+
+	// 今日日期
+	today := time.Date(year, month, day, 0, 0, 0, 0, time.Local)
+	switch tt {
+	case "today":
+		d = today
+	case "yesterday":
+		// 昨日日期
+		d = today.AddDate(0, 0, -1)
+	case "weekStart":
+		// 本周起始日期（周一）
+		d = today.AddDate(0, 0, -int(today.Weekday())+1)
+	case "monthStart":
+		// 本月起始日期
+		d = time.Date(year, month, 1, 0, 0, 0, 0, time.Local)
+	default:
+		d = time.Now().Local()
 	}
-	return false
+	return
+}
+
+// FormatTime 格式化时间
+func FormatTime(t time.Time) string {
+	return t.Format("2006-01-02 15:04:05")
+}
+
+func FormatTimeToUnix(tt string) int64 {
+	const longForm = "2006-01-02 15:04:05"
+	loc, _ := time.LoadLocation("UTC")
+	t, _ := time.ParseInLocation(longForm, tt, loc)
+	return t.Unix()
 }
