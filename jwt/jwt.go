@@ -7,6 +7,13 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
+var (
+	TokenExpired     = errors.New("token is expired")
+	TokenNotValidYet = errors.New("token not active yet")
+	TokenMalformed   = errors.New("that's not even a token")
+	TokenInvalid     = errors.New("couldn't handle this token")
+)
+
 // CustomClaims Payload 结构体
 type CustomClaims struct {
 	jwt.StandardClaims
@@ -31,13 +38,6 @@ func CreateToken(secretKey string, issuer string, uid uint, isAdmin bool) (token
 	tokenString, err = token.SignedString([]byte(secretKey))
 	return
 }
-
-var (
-	TokenExpired     = errors.New("token is expired")
-	TokenNotValidYet = errors.New("token not active yet")
-	TokenMalformed   = errors.New("that's not even a token")
-	TokenInvalid     = errors.New("couldn't handle this token")
-)
 
 // ParseToken 解析 token
 func ParseToken(tokenString string, secretKey string) (*CustomClaims, error) {
@@ -66,4 +66,21 @@ func ParseToken(tokenString string, secretKey string) (*CustomClaims, error) {
 		return nil, TokenInvalid
 	}
 	return nil, TokenInvalid
+}
+
+// 更新Token
+func RefreshToken(tokenString string, secretKey string) (string, error) {
+	jwt.TimeFunc = func() time.Time {
+		return time.Unix(0, 0)
+	}
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(secretKey), nil
+	})
+	if err != nil {
+		return "", err
+	}
+	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
+		return CreateToken(secretKey, claims.Issuer, claims.Uid, claims.Admin)
+	}
+	return "", TokenInvalid
 }
