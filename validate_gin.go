@@ -4,6 +4,7 @@ package util
 //将验证器错误翻译成中文
 
 import (
+	"errors"
 	"reflect"
 
 	"github.com/gin-gonic/gin/binding"
@@ -24,12 +25,9 @@ func (v *Validate) InitValidateGin() {
 }
 
 func (v *Validate) GinError(err error) (ret string) {
-	if validationErrors, ok := err.(validator.ValidationErrors); !ok {
+	var validationErrors validator.ValidationErrors
+	if !errors.As(err, &validationErrors) {
 		return err.Error()
-	} else {
-		for _, e := range validationErrors {
-			ret += e.Translate(v.trans) + ";"
-		}
 	}
 	return ret
 }

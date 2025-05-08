@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"os"
@@ -34,12 +33,12 @@ func GetExternalIP() string {
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
 	}(resp.Body)
-	content, _ := ioutil.ReadAll(resp.Body)
+	content, _ := io.ReadAll(resp.Body)
 	return string(content)
 }
 
-// GetPulicIP 通过dns服务器8.8.8.8:80获取使用的ip
-func GetPulicIP() string {
+// GetPublicIP 通过dns服务器8.8.8.8:80获取使用的ip
+func GetPublicIP() string {
 	conn, _ := net.Dial("udp", "8.8.8.8:80")
 	defer func(conn net.Conn) {
 		_ = conn.Close()
@@ -116,8 +115,11 @@ func IpBetween(from net.IP, to net.IP, test net.IP) bool {
 	if from == nil || to == nil || test == nil {
 		fmt.Println("An ip input is nil") // or return an error!? return false
 	}
+	//goland:noinspection GoDfaNilDereference
 	from16 := from.To16()
+	//goland:noinspection GoDfaNilDereference
 	to16 := to.To16()
+	//goland:noinspection GoDfaNilDereference
 	test16 := test.To16()
 	if from16 == nil || to16 == nil || test16 == nil {
 		fmt.Println("An ip did not convert to a 16 byte") // or return an error!?
@@ -147,7 +149,7 @@ type IP struct {
 	Isp       string `json:"isp"`
 }
 
-func TabaoAPI(ip string) *IPInfo {
+func TaobaoAPI(ip string) *IPInfo {
 	url := "http://ip.taobao.com/service/getIpInfo.php?ip="
 	url += ip
 	resp, err := http.Get(url)
@@ -157,12 +159,12 @@ func TabaoAPI(ip string) *IPInfo {
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
 	}(resp.Body)
-	out, err := ioutil.ReadAll(resp.Body)
+	out, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil
 	}
 	var result IPInfo
-	if err := json.Unmarshal(out, &result); err != nil {
+	if err = json.Unmarshal(out, &result); err != nil {
 		return nil
 	}
 	return &result

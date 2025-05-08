@@ -8,6 +8,8 @@ import (
 )
 
 func TestAll(t *testing.T) {
+	getIp, err := GetIp()
+	fmt.Println(getIp, err)
 	externalIp := GetExternalIP()
 	externalIp = strings.Replace(externalIp, "\n", "", -1)
 	fmt.Println("公网ip是: ", externalIp)
@@ -16,7 +18,7 @@ func TestAll(t *testing.T) {
 	if ip == nil {
 		t.Error("您输入的不是有效的IP地址，请重新输入！")
 	} else {
-		result := TabaoAPI(externalIp)
+		result := TaobaoAPI(externalIp)
 		if result != nil {
 			fmt.Println("国家：", result.Data.Country)
 			fmt.Println("地区：", result.Data.Area)
@@ -40,5 +42,5 @@ func TestAll(t *testing.T) {
 	isPublicIp = IsPublicIP(net.ParseIP("169.254.85.131"))
 	fmt.Println("It is public ip: ", isPublicIp)
 	fmt.Println("------Dividing Line------")
-	fmt.Println("aaa:", GetPulicIP())
+	fmt.Println("aaa:", GetPublicIP())
 }

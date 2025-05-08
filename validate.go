@@ -56,12 +56,9 @@ func (v *Validate) StructError(s interface{}) error {
 	}
 	if err := v.validate.Struct(s); err != nil {
 		var buffer bytes.Buffer
-		if validationErrors, ok := err.(validator.ValidationErrors); !ok {
+		var validationErrors validator.ValidationErrors
+		if !errors.As(err, &validationErrors) {
 			return err
-		} else {
-			for _, e := range validationErrors {
-				buffer.WriteString(e.Translate(v.trans) + ";")
-			}
 		}
 		return errors.New(buffer.String())
 	}
@@ -75,12 +72,9 @@ func (v *Validate) FieldError(field interface{}, tag string) error {
 	}
 	if err := v.validate.Var(field, tag); err != nil {
 		var buffer bytes.Buffer
-		if validationErrors, ok := err.(validator.ValidationErrors); !ok {
+		var validationErrors validator.ValidationErrors
+		if !errors.As(err, &validationErrors) {
 			return err
-		} else {
-			for _, e := range validationErrors {
-				buffer.WriteString(e.Translate(v.trans) + ";")
-			}
 		}
 		return errors.New(buffer.String())
 	}
